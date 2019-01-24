@@ -41,7 +41,7 @@ Perform a search for “Rubrik”, and the Rubrik Splunk Add-On will be
 displayed in the results. Click ‘Install’, and complete the displayed
 dialog.
 
-![](media/screenshot01.png)
+![](https://user-images.githubusercontent.com/12414122/51684170-84dd0980-1fb9-11e9-9b0a-02bfd2626396.png)
 
 After installation is complete, you will be prompted to restart your
 Splunk server. Click **Restart Now** or **Restart Later** depending on
@@ -58,7 +58,7 @@ Click
 to download the Rubrik Splunk. Click on Apps → Manage Apps in your
 Splunk GUI, then click **Install app from file**.
 
-![](media/screenshot02.png)
+![](https://user-images.githubusercontent.com/12414122/51684171-84dd0980-1fb9-11e9-845b-e4b5acf05a7c.png)
 
 Click **Choose File**, browse to the downloaded file and select
 **Upload**. A notification will be displayed near the top of the GUI
@@ -77,7 +77,7 @@ The next step is to configure credentials for your Rubrik CDM
 cluster(s). Click on **Apps** → **Rubrik Splunk Add-On**. Click on
 **Configuration**, then click **Add**.
 
-![](media/screenshot05.png)
+![](https://user-images.githubusercontent.com/12414122/51684174-84dd0980-1fb9-11e9-8641-0e9ca0e95013.png)
 
 This will display the **Add Account** dialog. Provide an account name,
 username and password for Splunk to connect to your CDM cluster via REST
@@ -104,7 +104,7 @@ Input**. The dropdown will display a list of all possible input types.
 Create inputs based on the values
 below.
 
-![](media/screenshot06.png)
+![](https://user-images.githubusercontent.com/12414122/51684175-84dd0980-1fb9-11e9-8afe-6336bb74fe46.png)
 
 | Note:​ If you are adding multiple Rubrik clusters, then it is a good idea to include a short version of the cluster name in the `Name` field, in this case, replace rubrik with the short name of your cluster. |
 | --- |
@@ -147,7 +147,7 @@ below.
 Below is an example of what your **Inputs** screen would look like if
 you have two clusters monitored by Splunk.
 
-![](media/screenshot07.png)
+![](https://user-images.githubusercontent.com/12414122/51684176-8575a000-1fb9-11e9-937e-e91054b5db88.png)
 
 #### Creating Datasets
 
@@ -161,7 +161,7 @@ You will use the search strings below to create each dataset. To create
 a new dataset, click on **Apps** → **Rubrik**, then **Create New Table
 Dataset**.
 
-![](media/screenshot08.png)
+![](https://user-images.githubusercontent.com/12414122/51684177-8575a000-1fb9-11e9-9e08-0d83a8d1f866.png)
 
 Click on **Search (Advanced)**, paste in the search string, and click
 the green search button. This will display a list of available fields
@@ -175,20 +175,20 @@ the **Rubrik - Runway Remaining** dataset.
 1\. Perform a search using the Search String, select the desired fields,
 and click **Done**.
 
-![](media/screenshot10.png)
+![](https://user-images.githubusercontent.com/12414122/51684179-8575a000-1fb9-11e9-8b5d-e07b7a61fcb1.png)
 
 2\. Preview the dataset and click **Save As**.
 
-![](media/screenshot11.png)
+![](https://user-images.githubusercontent.com/12414122/51684180-8575a000-1fb9-11e9-8130-30f28232c825.png)
 
 3\. Provide the **Table Title** and **Table ID** for the dataset and
 click **Save.**
 
-![](media/screenshot12.png)
+![](https://user-images.githubusercontent.com/12414122/51684181-8575a000-1fb9-11e9-8e1c-2f772c294493.png)
 
 4\. Click **Done**.
 
-![](media/screenshot17.png)
+![](https://user-images.githubusercontent.com/12414122/51684188-860e3680-1fb9-11e9-9e4d-6888181ad3c6.png)
 
 Use these values to create the five needed datasets based on the
 instructions above:
@@ -337,7 +337,7 @@ You will create one new input for Polaris. From within the Rubrik Splunk
 Add-On, click **Inputs**, then **Create New Input**, then **Polaris -
 Radar Anomales**.
 
-![](media/screenshot13.png)
+![](https://user-images.githubusercontent.com/12414122/51684182-8575a000-1fb9-11e9-8b0d-08f6f9bf3f11.png)
 
 Use these values to configure the input:
 
@@ -379,7 +379,7 @@ from the **Cluster Name** dashboard. The dashboard will populate with
 data that Splunk has gathered. Below is an example of the **Rubrik -
 Capacity Dashboard**.
 
-![](media/screenshot16.png)
+![](https://user-images.githubusercontent.com/12414122/51684187-8575a000-1fb9-11e9-8bfd-5c4c84ce924c.png)
 
 The table below show the default timeframe for the **Rubrik - Capacity
 Dashboard** components. All other dashboards components show 24 hours of
@@ -403,7 +403,7 @@ blank. To set a default value, follow these steps:
 Browse to the dashboard you wish to configure, and click the **Edit**
 button.
 
-![](media/screenshot14.png)
+![](https://user-images.githubusercontent.com/12414122/51684183-8575a000-1fb9-11e9-9c70-3ecfa11877fe.png)
 
 This will open the **Edit Dashboard** page. Click the pencil icon above
 the **Cluster Name** dropdown. In the displayed dialog, choose the
@@ -412,7 +412,7 @@ Options** section, then click **Apply**. Click **Save** on the **Edit
 Dashboard** page to save your
 changes.
 
-![](media/screenshot15.png)
+![](https://user-images.githubusercontent.com/12414122/51684184-8575a000-1fb9-11e9-8eec-caba4b54ea79.png)
 
 | Note: The list populating the `Default` dropdown may take some time to populate after new inputs are added to Splunk. |
 | --- |

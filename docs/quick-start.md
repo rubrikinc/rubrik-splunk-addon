@@ -55,7 +55,7 @@ Splunk Add-On** listed in the Apps menu.
 
 Click
 [here](https://github.com/rubrikinc/rubrik-addon-for-splunk/blob/master/App/Rubrik.spl?raw=true)
-to download the Rubrik Splunk. Click on Apps → Manage Apps in your
+to download the Rubrik Splunk. Click on **Apps** → **Manage Apps** in your
 Splunk GUI, then click **Install app from file**.
 
 ![](https://user-images.githubusercontent.com/12414122/51684171-84dd0980-1fb9-11e9-845b-e4b5acf05a7c.png)

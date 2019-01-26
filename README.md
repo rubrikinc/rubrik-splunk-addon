@@ -1,4 +1,4 @@
-# Rubrik Splunk Application/Add-On
+# Rubrik Splunk Application & Add-On
 
 ## Overview
 

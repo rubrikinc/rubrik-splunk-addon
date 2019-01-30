@@ -18,8 +18,9 @@ This consists of the datasets, dashboards and other Splunk artefacts used for ex
 
 ## Quick Start
 
-[Quick Start Guide](https://github.com/rubrikinc/rubrik-addon-for-splunk/blob/master/docs/quick-start.md)
+* [Quick Start Guide](https://github.com/rubrikinc/rubrik-addon-for-splunk/blob/master/docs/quick-start.md)
 
 ## Additional Links
 
-[Getting Started Video](https://www.youtube.com/watch?v=PHdNalIO0n0)
+* [VIDEO: Getting Started with the Rubrik Add-On for Splunk](https://www.youtube.com/watch?v=PHdNalIO0n0)
+* [BLOG: API First: Introducing the New Splunk Add-on for Rubrik](https://www.rubrik.com/blog/api-splunk-add-on-rubrik/)

@@ -1,7 +1,5 @@
 # Rubrik Splunk Application & Add-On
 
-## Overview
-
 This repository contains the Rubrik Add-On for Splunk and application. The files which compose this are as follows:
 
 ### Add-On

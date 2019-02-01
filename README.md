@@ -10,7 +10,7 @@ This consists of the back-end data inputs which enable the configuration of the 
 
 ### Application
 
-This consists of the datasets, dashboards and other Splunk artefacts used for exploring data.
+This consists of the datasets, dashboards and other Splunk artifacts used for exploring data.
 
 * `Rubrik.spl` - an export of the application
 

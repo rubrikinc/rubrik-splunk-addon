@@ -8,10 +8,10 @@ to consume dashboards, alerts, and analytics in an easy to use web
 interface. Data is ingested by Splunk via REST API and analyzed by the
 Splunk platform, presenting the following information:
 
-  * Event data - security, replication, backup, recovery, archive and more
-  * Capacity statistics and trending
-  * Backup and recovery histories and trending
-  * Ransomware detection events via [Polaris Radar](https://www.rubrik.com/product/polaris-radar/)
+* Event data - security, replication, backup, recovery, archive and more
+* Capacity statistics and trending
+* Backup and recovery histories and trending
+* Ransomware detection events via [Polaris Radar](https://www.rubrik.com/product/polaris-radar/)
 
 The Rubrik Add-On for Splunk is comprised of two pieces: the Rubrik
 Splunk Add-On, available on
@@ -29,8 +29,8 @@ components for the Rubrik Add-On for Splunk.
 
 ### Prerequisites
 
-  * Splunk 7.0 or greater
-  * [Splunk Datasets Add-On](https://splunkbase.splunk.com/app/3245/)
+* Splunk 7.0 or greater
+* [Splunk Datasets Add-On](https://splunkbase.splunk.com/app/3245/)
 
 ### Installing the Rubrik Splunk Add-On
 
@@ -323,6 +323,90 @@ writesPerSecond</td>
 </tbody>
 </table>
 
+<table width="100%">
+<tbody>
+<tr class="odd">
+<td><strong>Table Title</strong></td>
+<td>Rubrik - Replication Events</td>
+</tr>
+<tr>
+<td><strong>Search String</strong></td>
+<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Replication" | eval _time = strptime(time, "%a %b %d %H:%M:%S %Z %Y") | dedup id</td>
+</tr>
+<tr class="even">
+<td><strong>Table ID</strong></td>
+<td>rubrik_dataset_replication_job_events</td>
+</tr>
+<tr class="odd">
+<td><strong>Fields</strong></td>
+<td>_time<br>
+clusterName<br>
+eventStatus<br>
+locationName<br>
+message<br>
+objectId<br>
+objectName<br>
+objectType</td>
+</tr>
+</tbody>
+</table>
+
+<table width="100%">
+<tbody>
+<tr class="odd">
+<td><strong>Table Title</strong></td>
+<td>Rubrik - Archive Events</td>
+</tr>
+<tr>
+<td><strong>Search String</strong></td>
+<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Archive" | eval _time = strptime(time, "%a %b %d %H:%M:%S %Z %Y") | dedup id</td>
+</tr>
+<tr class="even">
+<td><strong>Table ID</strong></td>
+<td>rubrik_dataset_archive_job_events</td>
+</tr>
+<tr class="odd">
+<td><strong>Fields</strong></td>
+<td>_time<br>
+clusterName<br>
+eventStatus<br>
+locationName<br>
+message<br>
+objectId<br>
+objectName<br>
+objectType</td>
+</tr>
+</tbody>
+</table>
+
+<table width="100%">
+<tbody>
+<tr class="odd">
+<td><strong>Table Title</strong></td>
+<td>Rubrik - Recovery Events</td>
+</tr>
+<tr>
+<td><strong>Search String</strong></td>
+<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Recovery" | eval _time = strptime(time, "%a %b %d %H:%M:%S %Z %Y") | dedup id</td>
+</tr>
+<tr class="even">
+<td><strong>Table ID</strong></td>
+<td>rubrik_dataset_recovery_job_events</td>
+</tr>
+<tr class="odd">
+<td><strong>Fields</strong></td>
+<td>_time<br>
+clusterName<br>
+eventStatus<br>
+locationName<br>
+message<br>
+objectId<br>
+objectName<br>
+objectType</td>
+</tr>
+</tbody>
+</table>
+
 ### Configure Monitoring for Polaris
 
 Configuring monitoring for Polaris is very similar to CDM. If you
@@ -331,7 +415,7 @@ with the concepts. To configure credentials for Polaris, click on
 **Apps** → **Rubrik Splunk Add-On**. Click on **Configuration**, then
 click **Add**. Supply credentials with permissions to access Polaris.
 
-#### Creating Inputs
+#### Creating Input for Polaris
 
 You will create one new input for Polaris. From within the Rubrik Splunk
 Add-On, click **Inputs**, then **Create New Input**, then **Polaris -
@@ -367,11 +451,11 @@ inputs or datasets.
 
 There are three dashboards included with the Rubrik Add-On for Splunk:
 
-  * **Rubrik - Capacity Dashboard**: Displays capacity and throughput statistics for the cluster
+* **Rubrik - Capacity Dashboard**: Displays capacity and throughput statistics for the cluster
 
-  * **Rubrik - Job History Dashboard**: Displays 24 hours of backup history, including successful and failed job statistics, object type breakdown, and failure logs
+* **Rubrik - Job History Dashboard**: Displays 24 hours of backup history, including successful and failed job statistics, object type breakdown, and failure logs
 
-  * **Rubrik - Security Dashboard**: Displays 24 hours of login information, top 10 logins my username and login count, and top 10 failed logins
+* **Rubrik - Security Dashboard**: Displays 24 hours of login information, top 10 logins my username and login count, and top 10 failed logins
 
 To view dashboards, browse to **Apps** → **Rubrik**, and click on
 **Dashboards**. Click on the desired dashboard, and select a cluster
@@ -421,7 +505,7 @@ Check the [GitHub repo](https://github.com/rubrikinc/rubrik-splunk-addon) for mo
 
 ## Additional Reading
 
-  * [\[BLOG\] API First: Introducing the New Splunk Add-on for Rubrik](https://www.rubrik.com/blog/api-splunk-add-on-rubrik/)
-  * [Splunkbase: Rubrik Splunk Add-On](https://splunkbase.splunk.com/app/4119/#/details)
-  * [GitHub repo: Rubrik AddOn for Splunk](https://github.com/rubrikinc/rubrik-splunk-addon)
-  * [\[BLOG\] What are Splunk Apps and Add-Ons?](https://www.splunk.com/blog/2014/07/22/what-are-splunk-apps-and-add-ons.html)
+* [\[BLOG\] API First: Introducing the New Splunk Add-on for Rubrik](https://www.rubrik.com/blog/api-splunk-add-on-rubrik/)
+* [Splunkbase: Rubrik Splunk Add-On](https://splunkbase.splunk.com/app/4119/#/details)
+* [GitHub repo: Rubrik AddOn for Splunk](https://github.com/rubrikinc/rubrik-splunk-addon)
+* [\[BLOG\] What are Splunk Apps and Add-Ons?](https://www.splunk.com/blog/2014/07/22/what-are-splunk-apps-and-add-ons.html)

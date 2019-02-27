@@ -342,7 +342,6 @@ writesPerSecond</td>
 <td>_time<br>
 clusterName<br>
 eventStatus<br>
-locationName<br>
 message<br>
 objectId<br>
 objectName<br>
@@ -370,7 +369,6 @@ objectType</td>
 <td>_time<br>
 clusterName<br>
 eventStatus<br>
-locationName<br>
 message<br>
 objectId<br>
 objectName<br>
@@ -398,7 +396,6 @@ objectType</td>
 <td>_time<br>
 clusterName<br>
 eventStatus<br>
-locationName<br>
 message<br>
 objectId<br>
 objectName<br>

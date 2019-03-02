@@ -144,6 +144,22 @@ below.
 | **Global Account** | \<Account Name defined in previous section\> |
 | **Rubrik Node**    | \<FQDN or floating IP\>                      |
 
+| **Input Type**     | Rubrik - Archive Location Bandwidth          |
+| ------------------ | -------------------------------------------- |
+| **Name**           | rubrik\_archive\_location\_bandwidth         |
+| **Interval**       | 840                                          |
+| **Index**          | main                                         |
+| **Global Account** | \<Account Name defined in previous section\> |
+| **Rubrik Node**    | \<FQDN or floating IP\>                      |
+
+| **Input Type**     | Rubrik - Archive Location Usage              |
+| ------------------ | -------------------------------------------- |
+| **Name**           | rubrik\_archive\_location\_usage             |
+| **Interval**       | 3600                                         |
+| **Index**          | main                                         |
+| **Global Account** | \<Account Name defined in previous section\> |
+| **Rubrik Node**    | \<FQDN or floating IP\>                      |
+
 Below is an example of what your **Inputs** screen would look like if
 you have two clusters monitored by Splunk.
 
@@ -264,7 +280,8 @@ clusterName<br>
 eventStatus<br>
 eventType<br>
 message<br>
-username</td>
+username<br>
+hostname</td>
 </tr>
 </tbody>
 </table>
@@ -389,7 +406,7 @@ objectType</td>
 </tr>
 <tr class="even">
 <td><strong>Table ID</strong></td>
-<td>rubrik_dataset_recovery_job_events</td>
+<td>rubrik_dataset_recovery_events</td>
 </tr>
 <tr class="odd">
 <td><strong>Fields</strong></td>
@@ -399,7 +416,68 @@ eventStatus<br>
 message<br>
 objectId<br>
 objectName<br>
-objectType</td>
+objectType<br>
+username</td>
+</tr>
+</tbody>
+</table>
+
+<table width="100%">
+<tbody>
+<tr class="odd">
+<td><strong>Table Title</strong></td>
+<td>Rubrik - Archive Bandwidth Usage</td>
+</tr>
+<tr>
+<td><strong>Search String</strong></td>
+<td>(index="main") (sourcetype="rubrik:archivebandwidth") | eval _time = strptime(time, "%Y-%m-%dT%H:%M:%S.%f%Z")</td>
+</tr>
+<tr class="even">
+<td><strong>Table ID</strong></td>
+<td>rubrik_dataset_archive_bandwidth_usage</td>
+</tr>
+<tr class="odd">
+<td><strong>Fields</strong></td>
+<td>_time<br>
+clusterName<br>
+locationName<br>
+type<br>
+value</td>
+</tr>
+</tbody>
+</table>
+
+<table width="100%">
+<tbody>
+<tr class="odd">
+<td><strong>Table Title</strong></td>
+<td>Rubrik - Archive Location Usage</td>
+</tr>
+<tr>
+<td><strong>Search String</strong></td>
+<td>(index="main") (sourcetype="rubrik:archiveusage")</td>
+</tr>
+<tr class="even">
+<td><strong>Table ID</strong></td>
+<td>rubrik_dataset_archive_usage</td>
+</tr>
+<tr class="odd">
+<td><strong>Fields</strong></td>
+<td>_time<br>
+clusterName<br>
+dataArchived<br>
+dataDownloaded<br>
+locationName<br>
+numFilesetsArchived<br>
+numHypervVmsArchived<br>
+numLinuxFilesetsArchived<br>
+numManagedVolumesArchived<br>
+numMssqlDbsArchived<br>
+numNutanixVmsArchived<br>
+numShareFilesetsArchived<br>
+numStorageArrayVolumeGroupsArchived<br>
+numVMsArchived<br>
+numWindowsVolumeGroupsArchived</td>
 </tr>
 </tbody>
 </table>
@@ -440,19 +518,23 @@ Repo](https://github.com/rubrikinc/rubrik-splunk-addon). After
 downloading an upgrade, install it by browsing to **Apps** → **Manage
 Apps** in your Splunk GUI, then click **Install app from file**. Click
 **Choose File**, browse to the downloaded file, ensure that the
-**Upgrade App** box is checked and click **Upload**. Follow
-documentation included with the update to change or add any necessary
-inputs or datasets.
+**Upgrade App** box is checked and click **Upload**. Review the inputs
+and datasets section above, comparing them against the current configuration
+to identify changes in fields, queries, and new datasets and inputs.
 
 ## Usage
 
-There are three dashboards included with the Rubrik Add-On for Splunk:
+There are five dashboards included with the Rubrik Add-On for Splunk:
 
 * **Rubrik - Capacity Dashboard**: Displays capacity and throughput statistics for the cluster
 
 * **Rubrik - Job History Dashboard**: Displays 24 hours of backup history, including successful and failed job statistics, object type breakdown, and failure logs
 
 * **Rubrik - Security Dashboard**: Displays 24 hours of login information, top 10 logins my username and login count, and top 10 failed logins
+
+* **Rubrik - Recovery History Dashboard**: Displays 24 hours of recovery information for the selected cluster
+
+* **Rubrik - Archive and Replication Dashboard**: Displays 24 hours of information around arcival and replication from the selected cluster
 
 To view dashboards, browse to **Apps** → **Rubrik**, and click on
 **Dashboards**. Click on the desired dashboard, and select a cluster

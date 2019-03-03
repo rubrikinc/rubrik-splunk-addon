@@ -1,18 +1,12 @@
 # Rubrik Application & Add-On for Splunk
 
-This repository contains the Rubrik Add-On for Splunk and application. The files which compose this are as follows:
-
-### Add-On
-
-This consists of the back-end data inputs which enable the configuration of the interface between Splunk and the Rubrik system.
-
-* `TA-rubrik-0.0.2.spl` - a packaged version of the add-on
+This repository contains the Rubrik Splunk application, the add-on is found in Splunkbase at [this](https://splunkbase.splunk.com/app/4119) link.. The files which compose this are as follows:
 
 ### Application
 
 This consists of the datasets, dashboards and other Splunk artifacts used for exploring data.
 
-* `Rubrik.spl` - an export of the application
+* `Rubrik.spl` - an export of the application including dashboards for the gathered data.
 
 ## Quick Start
 

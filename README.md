@@ -1,6 +1,6 @@
 # Rubrik Application & Add-On for Splunk
 
-This repository contains the Rubrik Splunk application, the add-on is found in Splunkbase [here](https://splunkbase.splunk.com/app/4119) link. The files which compose this are as follows:
+This repository contains the Rubrik Splunk application, the add-on is found in Splunkbase [here](https://splunkbase.splunk.com/app/4119). The files which compose this are as follows:
 
 ## Add-On
 

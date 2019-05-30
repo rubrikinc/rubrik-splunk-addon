@@ -112,6 +112,9 @@ below.
 | Note:​ It is a good idea to use a floating IP address for the `Rubrik Node` value. This will ensure that in the case of a node being unavailable, the data points can still be gathered. Instructions on setting up floating IPs can be found in the Rubrik User Guide, which is available on the Rubrik Support Portal. |
 | --- |
 
+| Note:​ For each input you are able to choose to validate SSL certificates for the Rubrik cluster. This is disabled by default, but the 'Verify SSL Certificate' box can be checked on each input to enable this. |
+| --- |
+
 | **Input Type**     | Rubrik - Runway remaining                    |
 | ------------------ | -------------------------------------------- |
 | **Name**           | rubrik\_runway\_remaining                    |
@@ -506,7 +509,7 @@ Use these values to configure the input:
 | **Interval**       | 900                                          |
 | **Index**          | main                                         |
 | **Global Account** | \<Polaris Account Name\>                     |
-| **Polaris URL**    | https://\<your\_polaris\_url\>.my.rubrik.com |
+| **Polaris URL**    | \<your\_polaris\_url\>.my.rubrik.com         |
 
 ## Upgrading the Rubrik Add-On for Splunk
 

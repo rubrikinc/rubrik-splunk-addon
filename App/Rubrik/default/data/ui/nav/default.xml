@@ -1,0 +1,9 @@
+<nav search_view="search" color="#65A637">
+  <view name="rubrik_dashboard_capacity" default="true" />
+  <view name="rubrik_dashboard_job_history" />
+  <view name="search" />
+  <view name="datasets" />
+  <view name="reports" />
+  <view name="alerts" />
+  <view name="dashboards" />
+</nav>

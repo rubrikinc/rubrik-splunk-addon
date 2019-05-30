@@ -12,7 +12,7 @@ This consists of the back-end data inputs which enable the configuration of the 
 
 This consists of the datasets, dashboards and other Splunk artifacts used for exploring data.
 
-* `Rubrik.spl` - an export of the application including dashboards for the gathered data.
+* `rubrik_splunk_app_1.0.2.spl` - an export of the application including dashboards for the gathered data.
 
 # :blue_book: Documentation 
 

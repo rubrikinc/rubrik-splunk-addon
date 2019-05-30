@@ -1,0 +1,72 @@
+<form>
+  <label>Rubrik - Recovery History Dashboard</label>
+  <fieldset submitButton="false">
+    <input type="dropdown" token="clusterName" searchWhenChanged="true">
+      <label>Cluster Name</label>
+      <fieldForLabel>clusterName</fieldForLabel>
+      <fieldForValue>clusterName</fieldForValue>
+      <search>
+        <query>| from datamodel:"rubrik_dataset_recovery_events" | table clusterName | dedup clusterName</query>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </search>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <single>
+        <title>Recovery Tasks - Last 24 Hours</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_recovery_events" 
+| where clusterName=="$clusterName$" AND eventStatus=="Success" AND not like(message,"Unmounted%") AND not like(message,"Successfully%shipped logs%") | stats count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="height">250</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+    <panel>
+      <chart>
+        <title>Last 24 Hours - Recoveries by Object Type</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_recovery_events" 
+| where clusterName=="$clusterName$" AND eventStatus=="Success" AND not like(message,"Unmounted%") AND not like(message,"Successfully%shipped logs%") | stats count by objectType</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>Last 24 Hours - Top 10 Recoveries by Username</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_recovery_events" 
+| where clusterName=="$clusterName$" AND eventStatus=="Success" AND not like(message,"Unmounted%") AND not like(message,"Successfully%shipped logs%") | stats count by username | sort 10 - count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>Last 24 Hours - Top 10 Recoveries by Object Name</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_recovery_events" 
+| where clusterName=="$clusterName$" AND eventStatus=="Success" AND not like(message,"Unmounted%") AND not like(message,"Successfully%shipped logs%") | stats count by objectName | sort 10 - count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+</form>

@@ -1,0 +1,22 @@
+<panel>
+  <chart>
+    <title>Capacity Available</title>
+    <search>
+      <query>sourcetype="rubrik_rest_storage_summary" | sort -_time | head 1 | stats latest(used) as Used latest(available) as Available | transpose</query>
+      <earliest>$earliest$</earliest>
+      <latest>$latest$</latest>
+      <refresh>1m</refresh>
+      <refreshType>delay</refreshType>
+    </search>
+    <option name="charting.axisTitleX.visibility">visible</option>
+    <option name="charting.axisTitleY.visibility">visible</option>
+    <option name="charting.axisTitleY2.visibility">visible</option>
+    <option name="charting.chart">pie</option>
+    <option name="charting.drilldown">none</option>
+    <option name="charting.legend.placement">right</option>
+    <option name="refresh.display">progressbar</option>
+    <option name="trellis.enabled">0</option>
+    <option name="trellis.size">large</option>
+    <option name="trellis.splitBy">_aggregation</option>
+  </chart>
+</panel>

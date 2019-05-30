@@ -1,0 +1,93 @@
+<form>
+  <label>Rubrik - Security Dashboard</label>
+  <fieldset submitButton="false">
+    <input type="dropdown" token="clusterName">
+      <label>Cluster Name</label>
+      <fieldForLabel>clusterName</fieldForLabel>
+      <fieldForValue>clusterName</fieldForValue>
+      <search>
+        <query>| from datamodel:"rubrik_dataset_security_audit_events" | table clusterName | dedup clusterName</query>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </search>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <single>
+        <title>Last 24 Hours - Total Login Attempts</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_security_audit_events" | where clusterName=="$clusterName$" | stats count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="height">181</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <chart>
+        <title>Last 24 Hours - Login Success/Failure</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_security_audit_events" | where clusterName=="$clusterName$" | stats count(eval(eventStatus="Success")) as Success count(eval(eventStatus=="Failure")) as Failure | transpose</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>Last 24 Hours - Logins by User Name</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_security_audit_events" | where clusterName=="$clusterName$" | stats count by username | sort 10 - count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>Last 24 Hours - Failed Logins by User</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_security_audit_events" | where clusterName=="$clusterName$" | where eventStatus=="Failure" | stats count by username | sort 10 - count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>Failed Logins by Hostname</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_security_audit_events" | where clusterName=="$clusterName$" AND eventStatus=="Failure" | stats count by hostname | sort 10 - count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+</form>

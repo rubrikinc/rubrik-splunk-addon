@@ -1,0 +1,93 @@
+<form>
+  <label>Rubrik - Job History Dashboard</label>
+  <description>Backup job history reporting and analysis</description>
+  <fieldset submitButton="false">
+    <input type="dropdown" token="clusterName">
+      <label>Cluster Name</label>
+      <fieldForLabel>clusterName</fieldForLabel>
+      <fieldForValue>clusterName</fieldForValue>
+      <search>
+        <query>| from datamodel:"rubrik_dataset_backup_job_events" | table clusterName | dedup clusterName</query>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </search>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <single>
+        <title>Job History - Last 24 Hours Total Jobs</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_backup_job_events" | where clusterName=="$clusterName$" | stats count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Job History - Last 24 Hours Success Percentage</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_backup_job_events" | where clusterName=="$clusterName$" | stats count(eval(eventStatus="Success")) as Success count(eval(eventStatus=="Failure")) as Failure | eval percent_difference=((Success/(Success+Failure))*100) | fields percent_difference</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0xd93f3c","0xf58f39","0xf7bc38","0x65a637"]</option>
+        <option name="rangeValues">[60,80,99]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="unit">%</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>Job History - Last 24 Hours Success Rate</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_backup_job_events" | where clusterName=="$clusterName$" | stats count(eval(eventStatus="Success")) as Success count(eval(eventStatus=="Failure")) as Failure | transpose</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Job History - Last 24 Hours by Object Type</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_backup_job_events" | where clusterName=="$clusterName$" | stats count by objectType</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>Job History - Last 24 Hours Failed Backups</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_backup_job_events" | where clusterName=="$clusterName$" | where eventStatus=="Failure" | table _time,objectName,message</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+</form>

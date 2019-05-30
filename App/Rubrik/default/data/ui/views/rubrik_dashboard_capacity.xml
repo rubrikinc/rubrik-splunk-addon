@@ -1,0 +1,190 @@
+<form>
+  <label>Rubrik - Capacity Dashboard</label>
+  <description>Overview of capacity usage in the Rubrik system</description>
+  <fieldset submitButton="false">
+    <input type="dropdown" token="clusterName">
+      <label>Cluster Name</label>
+      <fieldForLabel>clusterName</fieldForLabel>
+      <fieldForValue>clusterName</fieldForValue>
+      <search>
+        <query>| from datamodel:"rubrik_dataset_cluster_io_stats" | table clusterName | dedup clusterName</query>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </search>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <chart>
+        <title>Capacity Available</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_storage_summary" | where clusterName=="$clusterName$" | sort -_time | head 1 | stats latest(used) as Used latest(available) as Available | transpose</query>
+          <earliest>$earliest$</earliest>
+          <latest>$latest$</latest>
+          <refresh>1m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.chart">pie</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="height">188</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.size">large</option>
+        <option name="trellis.splitBy">_aggregation</option>
+      </chart>
+    </panel>
+    <panel>
+      <single>
+        <title>Capacity Available - Percentage</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_storage_summary" | where clusterName=="$clusterName$" | sort -_time | head 1 | stats latest(used) as Used latest(available) as Available | eval percent_free=((Available/(Available+Used))*100) | fields percent_free</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="height">202</option>
+        <option name="numberPrecision">0.0</option>
+        <option name="rangeColors">["0xd93f3c","0xf58f39","0xf7bc38","0x65a637"]</option>
+        <option name="rangeValues">[25,40,60]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="unit">%</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Runway Remaining - Days</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_runway_remaining" | where clusterName=="$clusterName$" | fields daysRemaining</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="colorBy">trend</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="height">187</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="underLabel">days</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>Runway Remaining</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_runway_remaining" | where clusterName=="$clusterName$" | rename daysRemaining as "Days Remaining" | table _time,"Days Remaining"</query>
+          <earliest>-90d@d</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.axisTitleX.visibility">collapsed</option>
+        <option name="charting.axisTitleY.text">Days Remaining</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.nullValueMode">connect</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">0</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>Cluster Throughput - IOPS</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_cluster_io_stats" | where clusterName=="$clusterName$" | fields _time,readsPerSecond,writesPerSecond | timechart span=1m max(readsPerSecond) as Reads max(writesPerSecond) as Writes</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.axisTitleX.text">Time</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Cluster Throughput - Bytes per Second</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_cluster_io_stats" | where clusterName=="$clusterName$" | fields _time,readBytePerSecond,writeBytePerSecond | timechart span=1m max(readBytePerSecond) as Reads max(writeBytePerSecond) as Writes</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <refresh>5m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="charting.axisTitleX.text">Time</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>Archive Bandwidth Usage - Outgoing</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_archive_bandwidth_usage" | where clusterName=="$clusterName$"  and type=="Outgoing" | fields _time,type,value,locationName 
+| timechart span=1m max(value) by locationName</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.axisTitleX.text">Time</option>
+        <option name="charting.axisTitleY.text">Bandwidth Usage (bps)</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Archive Bandwidth Usage - Incoming</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_archive_bandwidth_usage" | where clusterName=="$clusterName$"  and type=="Incoming" | fields _time,type,value,locationName 
+| timechart span=1m max(value) by locationName</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.axisTitleX.text">Time</option>
+        <option name="charting.axisTitleY.text">Bandwidth Usage (bps)</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.drilldown">none</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>Archive Usage by Location</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_archive_usage" 
+| where clusterName=="$clusterName$" 
+| fields _time,locationName,dataArchived 
+| eval dataGb = dataArchived / 1073741824
+| timechart span=8h max(dataGb) by locationName</query>
+          <earliest>-1mon@mon</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.axisTitleX.text">Time</option>
+        <option name="charting.axisTitleY.text">Data Archived (GB)</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+</form>

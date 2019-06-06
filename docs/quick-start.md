@@ -382,7 +382,7 @@ objectType</td>
 </tr>
 <tr class="even">
 <td><strong>Table ID</strong></td>
-<td>rubrik_dataset_archive_job_events</td>
+<td>rubrik_dataset_archive_events</td>
 </tr>
 <tr class="odd">
 <td><strong>Fields</strong></td>

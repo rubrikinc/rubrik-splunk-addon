@@ -3,10 +3,7 @@
 
 ## Introduction to the Rubrik Add-On for Splunk
 
-Rubrik’s [API first architecture](https://www.rubrik.com/product/api-integration/) allows for integration with a wide array of monitoring and visibility tools. This quick start guide will provide everything needed to begin streaming metrics from Rubrik CDM and Polaris into Splunk, allowing you
-to consume dashboards, alerts, and analytics in an easy to use web
-interface. Data is ingested by Splunk via REST API and analyzed by the
-Splunk platform, presenting the following information:
+Rubrik’s [API first architecture](https://www.rubrik.com/product/api-integration/) allows for integration with a wide array of monitoring and visibility tools. This quick start guide will provide everything needed to begin streaming metrics from Rubrik CDM and Polaris into Splunk, allowing you to consume dashboards, alerts, and analytics in an easy to use web interface. Data is ingested by Splunk via REST API and analyzed by the Splunk platform, presenting the following information:
 
 * Event data - security, replication, backup, recovery, archive and more
 * Capacity statistics and trending
@@ -16,8 +13,8 @@ Splunk platform, presenting the following information:
 The Rubrik Add-On for Splunk is comprised of two pieces: the Rubrik
 Splunk Add-On, available on
 [Splunkbase](https://splunkbase.splunk.com/app/4119/),
-and the Rubrik Splunk Application, available in our
-[GitHub repo](https://github.com/rubrikinc/rubrik-splunk-addon). The
+and the Rubrik Splunk Application, also available on
+[Splunkbase](https://splunkbase.splunk.com/app/4570/). The
 add-on performs the heavy lifting of communicating with the Rubrik REST
 API endpoint to gather metrics, while the application contains the
 dashboards and other logic used for visualization in Splunk.
@@ -53,18 +50,19 @@ Splunk Add-On** listed in the Apps menu.
 
 ### Installing the Rubrik Splunk Application
 
-Click
-[here](https://github.com/rubrikinc/rubrik-addon-for-splunk/blob/master/App/Rubrik.spl?raw=true)
-to download the Rubrik Splunk. Click on **Apps** → **Manage Apps** in your
-Splunk GUI, then click **Install app from file**.
+Search for the Rubrik Splunk Add-On by clicking on **Apps** → **Find
+More Apps** in your Splunk GUI, or browse to
+`http://<Your Splunk Server>:8000/en-US/manager/system/appsremote`.
+Perform a search for “Rubrik”, and the Rubrik Splunk Application will be
+displayed in the results. Click ‘Install’, and complete the displayed
+dialog.
 
-![](https://user-images.githubusercontent.com/12414122/51684171-84dd0980-1fb9-11e9-845b-e4b5acf05a7c.png)
+After installation is complete, you will be prompted to restart your
+Splunk server. Click **Restart Now** or **Restart Later** depending on
+your preference. Continue with the installation steps once the restart
+is complete.
 
-Click **Choose File**, browse to the downloaded file and select
-**Upload**. A notification will be displayed near the top of the GUI
-once the application is successfully installed. Notice that the Rubrik
-Application is now displayed in the App menu, along with the Rubrik
-Splunk Add-On. Installation of all required components is now complete.
+After logging back into the Splunk server, you will see the **Rubrik Splunk Application** listed in the Apps menu.
 
 ## Configuration
 
@@ -355,7 +353,7 @@ writesPerSecond</td>
 </tr>
 <tr class="even">
 <td><strong>Table ID</strong></td>
-<td>rubrik_dataset_replication_job_events</td>
+<td>rubrik_dataset_replication_events</td>
 </tr>
 <tr class="odd">
 <td><strong>Fields</strong></td>
@@ -516,12 +514,7 @@ Use these values to configure the input:
 Upgrades for the Rubrik Splunk Add-On can be performed directly through
 the Splunk GUI by clicking on **Apps** → **Manage Apps**, and clicking
 **Update** for the Rubrik Splunk Add-On. Upgrades for the Rubrik Splunk
-Application will be available on the [GitHub
-Repo](https://github.com/rubrikinc/rubrik-splunk-addon). After
-downloading an upgrade, install it by browsing to **Apps** → **Manage
-Apps** in your Splunk GUI, then click **Install app from file**. Click
-**Choose File**, browse to the downloaded file, ensure that the
-**Upgrade App** box is checked and click **Upload**. Review the inputs
+Application will be available via the same method. Review the inputs
 and datasets section above, comparing them against the current configuration
 to identify changes in fields, queries, and new datasets and inputs.
 

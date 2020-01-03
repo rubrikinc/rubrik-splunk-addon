@@ -4,13 +4,13 @@
 
 This document is intended to provide example searches and ideas for customers wishing to customise dashboards in Splunk using the Rubrik Splunk application.
 
-The application provides some example dashboards out of the box, but many customers wish to have more specific data presented in a visual format. Here we discuss some ideas for such customisations, as well as provide sample searches for these ideas.
+The application provides some example dashboards out of the box, but many customers wish to have more specific data presented in a visual format. Here we discuss some ideas for such customisations, as well as provide sample searches for these ideas, and some guides to creating dashboards for data inputs which do not have out of the box dashboards provided.
 
 ## Per-Object Type Reporting Using Dashboard Inputs
 
 This describes adding a dropdown to the dashboard to filter the resultant panels based on object type.
 
-### Adding a dropdown
+### Adding an object type dropdown
 
 The following dropdown can be added to the 'Job History Dashboard' dashboard:
 
@@ -39,3 +39,63 @@ where objectType=="$objectType$"
 ```
 
 This can be added in-line to the existing query.
+
+## Managed Volume Summary Dashboard
+
+This describes creating a dashboard from the 'Rubrik - Managed Volume Summary' Data Input provided as part of the Rubrik Splunk application. A screenshot of the produced dashboard is shown below:
+
+![Managed Volume Summary Dashboard](./images/man_vol_summary_dashboard.png)
+
+### Adding a cluster dropdown
+
+Create a new dashboard, and add a dropdown input type to the dashboard with the following search string:
+
+```none
+| from datamodel:"rubrik_dataset_managed_volume_summary" | table clusterName | dedup clusterName
+```
+
+This input needs to be given a token name, for the remainder of this example we will use the value `clusterName` (this is set up during creation of the dashboard input).
+
+### Adding panels
+
+The below describes the panels shown on the screenshot above.
+
+#### Count of Managed Volumes
+
+Query:
+
+```none
+| from datamodel:"rubrik_dataset_managed_volume_summary" | where clusterName=="$clusterName$" | head 1 | stats max(count)
+```
+
+Visualisation Type: Single Value
+
+#### Managed Volume Breakdown by Protocol
+
+Query:
+
+```none
+| from datamodel:"rubrik_dataset_managed_volume_summary"  | where clusterName=="$clusterName$" | head 1  | stats max(nfs) as NFS, max(smb) as SMB  | transpose
+```
+
+Visualisation Type: Pie Chart
+
+#### Unexported Managed Volumes
+
+Query:
+
+```none
+| from datamodel:"rubrik_dataset_managed_volume_summary"  | where clusterName=="$clusterName$" | head 1 | stats max(count) as Count max(exported) as Exported | eval nonExported = Count - Exported | fields nonExported
+```
+
+Visualisation Type: Single Value
+
+#### Writable Managed Volumes
+
+Query:
+
+```none
+| from datamodel:"rubrik_dataset_managed_volume_summary"  | where clusterName=="$clusterName$" | head 1 | stats max(nfs) as NFS, max(smb) as SMB  | transpose
+```
+
+Visualisation Type: Single Value

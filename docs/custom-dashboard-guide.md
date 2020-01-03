@@ -124,7 +124,7 @@ Add a dropdown input type to the dashboard with the following search string:
 | from datamodel:"rubrik_dataset_org_capacity" | where cluster_name="$cluster_name$" | table Organization | dedup Organization
 ```
 
-This input needs to be given a token name, for the remainder of this example we will use the value `org_name` (this is set up during creation of the dashboard input).
+This input needs to be given a token name, for the remainder of this example we will use the value `orgName` (this is set up during creation of the dashboard input).
 
 ### Adding panels
 

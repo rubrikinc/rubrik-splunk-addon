@@ -99,3 +99,83 @@ Query:
 ```
 
 Visualisation Type: Single Value
+
+## Organization Capacity Report Dashboard
+
+This describes creating a dashboard from the 'Rubrik - Managed Volume Summary' Data Input provided as part of the Rubrik Splunk application. A screenshot of the produced dashboard is shown below:
+
+![Organization Capacity Report Dashboard](./images/org_cap_report_dashboard.png)
+
+### Adding a cluster dropdown
+
+Create a new dashboard, and add a dropdown input type to the dashboard with the following search string:
+
+```none
+| from datamodel:"rubrik_dataset_org_capacity" | table cluster_name | dedup cluster_name
+```
+
+This input needs to be given a token name, for the remainder of this example we will use the value `cluster_name` (this is set up during creation of the dashboard input).
+
+### Adding a organization dropdown
+
+Add a dropdown input type to the dashboard with the following search string:
+
+```none
+| from datamodel:"rubrik_dataset_org_capacity" | where cluster_name="$cluster_name$" | table Organization | dedup Organization
+```
+
+This input needs to be given a token name, for the remainder of this example we will use the value `org_name` (this is set up during creation of the dashboard input).
+
+### Adding panels
+
+The below describes the panels shown on the screenshot above.
+
+#### Local Storage by Organization (current)
+
+Query:
+
+```none
+| from datamodel:"rubrik_dataset_org_capacity" | where cluster_name="$cluster_name$" and Organization != "Global" | streamstats count by Organization | where count=1 | chart max(LocalStorage) by Organization
+```
+
+Visualisation Type: Pie Chart
+
+#### Local Storage by Organization (over time)
+
+Query:
+
+```none
+| from datamodel:"rubrik_dataset_org_capacity" | where Organization != "Global" and cluster_name="$cluster_name$" | timechart span=1d max(LocalStorage) by Organization
+```
+
+Visualisation Type: Line Chart
+
+#### Archive Storage by Organization (over time)
+
+Query:
+
+```none
+| from datamodel:"rubrik_dataset_org_capacity" | where Organization != "Global" and cluster_name="$cluster_name$" | timechart span=1d max(ArchiveStorage) by Organization
+```
+
+Visualisation Type: Line Chart
+
+#### Replica Storage by Organization (over time)
+
+Query:
+
+```none
+| from datamodel:"rubrik_dataset_org_capacity"  | where Organization != "Global" and cluster_name="$cluster_name$" | timechart span=1d max(ReplicaStorage) by Organization
+```
+
+Visualisation Type: Line Chart
+
+#### Data Reduction for selected Organization
+
+Query:
+
+```none
+| from datamodel:"rubrik_dataset_org_capacity" | where Organization="$orgName$" and cluster_name="$cluster_name$" | sort -_time | head 1 | stats max(LocalDataReductionPercent) As dataReduction | eval data_reduction=(dataReduction*100)  | fields data_reduction
+```
+
+Visualisation Type: Single Value

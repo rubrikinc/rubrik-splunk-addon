@@ -40,11 +40,15 @@ where objectType=="$objectType$"
 
 This can be added in-line to the existing query.
 
+An XML copy of an example of this being used with the 'Job History Dashboard' is available [here](./custom-dashboards/jobhistory_by_objtype_dashboard.xml).
+
 ## Managed Volume Summary Dashboard
 
 This describes creating a dashboard from the 'Rubrik - Managed Volume Summary' Data Input provided as part of the Rubrik Splunk application. A screenshot of the produced dashboard is shown below:
 
 ![Managed Volume Summary Dashboard](./images/man_vol_summary_dashboard.png)
+
+An XML copy of this dashboard is available [here](./custom-dashboards/man_vol_sumamry_dashboard.xml).
 
 ### Adding a cluster dropdown
 
@@ -105,6 +109,8 @@ Visualisation Type: Single Value
 This describes creating a dashboard from the 'Rubrik - Managed Volume Summary' Data Input provided as part of the Rubrik Splunk application. A screenshot of the produced dashboard is shown below:
 
 ![Organization Capacity Report Dashboard](./images/org_cap_report_dashboard.png)
+
+An XML copy of this dashboard is available [here](./custom-dashboards/org_cap_report_dashboard.xml).
 
 ### Adding a cluster dropdown
 
@@ -179,3 +185,97 @@ Query:
 ```
 
 Visualisation Type: Single Value
+
+## VMware Object Dashboard
+
+This describes creating a dashboard from the 'Rubrik - Event Feed' Data Input provided as part of the Rubrik Splunk application, specifically filtering for VMware vSphere VM objects. A screenshot of the produced dashboard is shown below:
+
+![VMware Object Dashboard](./images/vmware_object_dashboard.png)
+
+An XML copy of this dashboard is available [here](./custom-dashboards/vmware_object_dashboard.xml).
+
+### Adding a cluster dropdown
+
+Create a new dashboard, and add a dropdown input type to the dashboard with the following search string:
+
+```none
+| from datamodel:"rubrik_dataset_backup_job_events" | table clusterName | dedup clusterName
+```
+
+This input needs to be given a token name, for the remainder of this example we will use the value `clusterName` (this is set up during creation of the dashboard input).
+
+### Adding panels
+
+The below describes the panels shown on the screenshot above.
+
+#### vSphere VMs - Last 24 Hours Total Jobs
+
+Query:
+
+```none
+| from datamodel:"rubrik_dataset_backup_job_events"| where objectType=="VmwareVm" and clusterName="$clusterName$"
+| stats count
+```
+
+Visualisation Type: Single Value
+
+#### vSphere VMs - Last 24 Hours Success Percentage
+
+Query:
+
+```none
+| from datamodel:"rubrik_dataset_backup_job_events" | where objectType=="VmwareVm" and clusterName="$clusterName$"
+ | stats count(eval(eventStatus="Success")) as Success count(eval(eventStatus=="Failure")) as Failure | eval percent_difference=((Success/(Success+Failure))*100) | fields percent_difference
+ ```
+
+Visualisation Type: Single Value
+
+#### vSphere VMs - Last 24 Hours Failed Job Count
+
+Query:
+
+```none
+| from datamodel:"rubrik_dataset_backup_job_events"| where objectType=="VmwareVm" and clusterName="$clusterName$" and eventStatus=="Failure"
+ | stats count
+```
+
+Visualisation Type: Single Value
+
+#### vSphere VMs - Last 24 Hours Failed Backups
+
+Query:
+
+```none
+| from datamodel:"rubrik_dataset_backup_job_events" | where objectType=="VmwareVm" and clusterName="$clusterName$" | where eventStatus=="Failure" | table _time,objectName,message
+```
+
+Visualisation Type: Statistics Table
+
+#### vSphere VMs - Last Backup Time
+
+Query:
+
+```none
+| from datamodel:"rubrik_dataset_backup_job_events"
+| where objectType=="VmwareVm" and clusterName="$clusterName$"
+| where like(message,"Completed backup of vSphere VM%") or like(message,"Completed  backup of vSphere VM%")
+| dedup objectId | table _time,objectName | sort _time
+| reverse
+```
+
+Visualisation Type: Statistics Table
+
+#### vSphere VMs with no backups in last 3 days
+
+Query:
+
+```none
+| from datamodel:"rubrik_dataset_backup_job_events"
+| where objectType=="VmwareVm" and clusterName="DEVOPS-1"
+| where like(message,"Completed backup of vSphere VM%") or like(message,"Completed  backup of vSphere VM%")
+| dedup objectId | table _time,objectName | sort _time
+| reverse
+| where _time < relative_time(now(),"-3d@d")
+```
+
+Visualisation Type: Statistics Table

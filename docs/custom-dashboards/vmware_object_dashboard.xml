@@ -1,0 +1,115 @@
+<form>
+  <label>Rubrik - VMware Object Dashboard</label>
+  <fieldset submitButton="false">
+    <input type="dropdown" token="clusterName">
+      <label>Cluster Name</label>
+      <fieldForLabel>clusterName</fieldForLabel>
+      <fieldForValue>clusterName</fieldForValue>
+      <search>
+        <query>| from datamodel:"rubrik_dataset_backup_job_events" | table clusterName | dedup clusterName</query>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </search>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <single>
+        <title>vSphere VMs - Last 24 Hours Total Jobs</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_backup_job_events"| where objectType=="VmwareVm" and clusterName="$clusterName$"
+| stats count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>vSphere VMs - Last 24 Hours Success Percentage</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_backup_job_events" | where objectType=="VmwareVm" and clusterName="$clusterName$"
+ | stats count(eval(eventStatus="Success")) as Success count(eval(eventStatus=="Failure")) as Failure | eval percent_difference=((Success/(Success+Failure))*100) | fields percent_difference</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0xd93f3c","0xf58f39","0xf7bc38","0x65a637"]</option>
+        <option name="rangeValues">[60,80,99]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="unit">%</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>vSphere VMs - Last 24 Hours Failed Job Count</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_backup_job_events"| where objectType=="VmwareVm" and clusterName="$clusterName$" and eventStatus=="Failure"
+ | stats count</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>vSphere VMs - Last 24 Hours Failed Backups</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_backup_job_events" | where objectType=="VmwareVm" and clusterName="$clusterName$" | where eventStatus=="Failure" | table _time,objectName,message</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>vSphere VMs - Last Backup Time</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_backup_job_events"
+| where objectType=="VmwareVm" and clusterName="$clusterName$"
+| where like(message,"Completed backup of vSphere VM%") or like(message,"Completed  backup of vSphere VM%")
+| dedup objectId | table _time,objectName | sort _time
+| reverse</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>vSphere VMs with no backups in last 3 days</title>
+        <search>
+          <query>| from datamodel:"rubrik_dataset_backup_job_events"
+| where objectType=="VmwareVm" and clusterName="DEVOPS-1"
+| where like(message,"Completed backup of vSphere VM%") or like(message,"Completed  backup of vSphere VM%")
+| dedup objectId | table _time,objectName | sort _time
+| reverse
+| where _time &lt; relative_time(now(),"-3d@d")</query>
+          <earliest>-30d@d</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+</form>

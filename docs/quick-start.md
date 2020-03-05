@@ -161,10 +161,50 @@ below.
 | **Global Account** | \<Account Name defined in previous section\> |
 | **Rubrik Node**    | \<FQDN or floating IP\>                      |
 
+| **Input Type**     | Rubrik - Organization Capacity Report        |
+| ------------------ | -------------------------------------------- |
+| **Name**           | rubrik\_org\_capacity\_report                |
+| **Interval**       | 1800                                         |
+| **Index**          | main                                         |
+| **Global Account** | \<Account Name defined in previous section\> |
+| **Rubrik Node**    | \<FQDN or floating IP\>                      |
+
+| **Input Type**     | Rubrik - Managed Volume Summary              |
+| ------------------ | -------------------------------------------- |
+| **Name**           | rubrik\_mv\_summary                          |
+| **Interval**       | 600                                          |
+| **Index**          | main                                         |
+| **Global Account** | \<Account Name defined in previous section\> |
+| **Rubrik Node**    | \<FQDN or floating IP\>                      |
+
+| **Input Type**     | Rubrik - Node IO Stats                       |
+| ------------------ | -------------------------------------------- |
+| **Name**           | rubrik\_node\_io\_stats                      |
+| **Interval**       | 60                                           |
+| **Index**          | main                                         |
+| **Global Account** | \<Account Name defined in previous section\> |
+| **Rubrik Node**    | \<FQDN or floating IP\>                      |
+
+| **Input Type**     | Rubrik - Node Stats                          |
+| ------------------ | -------------------------------------------- |
+| **Name**           | rubrik\_node\_stats                          |
+| **Interval**       | 60                                           |
+| **Index**          | main                                         |
+| **Global Account** | \<Account Name defined in previous section\> |
+| **Rubrik Node**    | \<FQDN or floating IP\>                      |
+
 Below is an example of what your **Inputs** screen would look like if
 you have two clusters monitored by Splunk.
 
 ![](https://user-images.githubusercontent.com/12414122/51684176-8575a000-1fb9-11e9-937e-e91054b5db88.png)
+
+There is also a custom report input which can be used to pull in data from a Rubrik Envision
+custom report, when adding this we need the custom report ID which is available in the URL of the
+UI when viewing the report, an example of a custom report ID format is: `CustomReport:::63db2599-54dc-490b-b199-5f54cfd231c7`.
+It is suggested that when adding this input, an interval of 21600 (6 hours) is used, but as with the
+other inputs, this can be tweaked as required. Datasets for custom report inputs can be created in a similar
+way as below, but the required fields will vary depending on the report, so instructions for this are not
+included below.
 
 #### Creating Datasets
 
@@ -484,6 +524,170 @@ numWindowsVolumeGroupsArchived</td>
 </tbody>
 </table>
 
+<table width="100%">
+<tbody>
+<tr class="odd">
+<td><strong>Table Title</strong></td>
+<td>Rubrik - Node IO Stats</td>
+</tr>
+<tr>
+<td><strong>Search String</strong></td>
+<td>(index="main") (sourcetype="rubrik:nodeiostats") | fields "_time", "clusterName", "nodeId", "readBytePerSecond", "readsPerSecond", "time", "writeBytePerSecond", "writesPerSecond" | eval _time = strptime(time, "%Y-%m-%dT%H:%M:%S.%f%Z") | fields "_time", "clusterName", "nodeId", "readBytePerSecond", "readsPerSecond", "writeBytePerSecond", "writesPerSecond"</td>
+</tr>
+<tr class="even">
+<td><strong>Table ID</strong></td>
+<td>rubrik_dataset_node_io_stats</td>
+</tr>
+<tr class="odd">
+<td><strong>Fields</strong></td>
+<td>_time<br>
+clusterName<br>
+nodeId<br>
+readBytePerSecond<br>
+readsPerSecond<br>
+writeBytePerSecond<br>
+writesPerSecond</td>
+</tr>
+</tbody>
+</table>
+
+<table width="100%">
+<tbody>
+<tr class="odd">
+<td><strong>Table Title</strong></td>
+<td>Rubrik - Organisation Capacity Report</td>
+</tr>
+<tr>
+<td><strong>Search String</strong></td>
+<td>(index="main") (sourcetype="rubrik:orgcapacityreport")</td>
+</tr>
+<tr class="even">
+<td><strong>Table ID</strong></td>
+<td>rubrik_dataset_node_io_stats</td>
+</tr>
+<tr class="odd">
+<td><strong>Fields</strong></td>
+<td>_time<br>
+ArchiveStorage<br>
+ArchiveStorageGrowth<br>
+cluster_name<br>
+DataReductionPercent<br>
+LocalDataReductionPercent<br>
+LocalLogicalBytes<br>
+LocalLogicalDataReductionPercent<br>
+LocalStorage<br>
+LocalStorageGrowth<br>
+LogicalDataProtected<br>
+LogicalDataReductionPercent<br>
+Month<br>
+Organization<br>
+OrganizationId<br>
+OrganizationState<br>
+ReplicaStorage<br>
+ReplicaStorageGrowth<br>
+TotalArchiveStorage<br>
+TotalLocalStorage<br>
+TotalReplicaStorage</td>
+</tr>
+</tbody>
+</table>
+
+
+<table width="100%">
+<tbody>
+<tr class="odd">
+<td><strong>Table Title</strong></td>
+<td>Rubrik - Managed Volume Summary</td>
+</tr>
+<tr>
+<td><strong>Search String</strong></td>
+<td>(index="main") (sourcetype="rubrik:mvsummary")</td>
+</tr>
+<tr class="even">
+<td><strong>Table ID</strong></td>
+<td>rubrik_dataset_managed_volume_summary</td>
+</tr>
+<tr class="odd">
+<td><strong>Fields</strong></td>
+<td>_time<br>
+clusterName<br>
+count<br>
+exported<br>
+nfs<br>
+smb<br>
+writable</td>
+</tr>
+</tbody>
+</table>
+
+<table width="100%">
+<tbody>
+<tr class="odd">
+<td><strong>Table Title</strong></td>
+<td>Rubrik - Node Stats</td>
+</tr>
+<tr>
+<td><strong>Search String</strong></td>
+<td>(index="main") (sourcetype="rubrik:nodestats") | eval _time = strptime(time, "%Y-%m-%dT%H:%M:%S.%f%Z")</td>
+</tr>
+<tr class="even">
+<td><strong>Table ID</strong></td>
+<td>rubrik_dataset_node_io_stats</td>
+</tr>
+<tr class="odd">
+<td><strong>Fields</strong></td>
+<td>_time<br>
+bytesReceived<br>
+bytesTransmitted<br>
+clusterName<br>
+cpuCores<br>
+cpuStat<br>
+hdd_active_count<br>
+hdd_inactive_count<br>
+ipAddress<br>
+isTunnelEnabled<br>
+nodeId<br>
+ram<br>
+readBytePerSecond<br>
+readsPerSecond<br>
+sda_capacityBytes<br>
+sda_diskType<br>
+sda_isDegraded<br>
+sda_path<br>
+sda_status<br>
+sda_unallocatedBytes<br>
+sda_usableBytes<br>
+sdb_capacityBytes<br>
+sdb_diskType<br>
+sdb_isDegraded<br>
+sdb_path<br>
+sdb_status<br>
+sdb_unallocatedBytes<br>
+sdb_usableBytes<br>
+sdc_capacityBytes<br>
+sdc_diskType<br>
+sdc_isDegraded<br>
+sdc_path<br>
+sdc_status<br>
+sdc_unallocatedBytes<br>
+sdc_usableBytes<br>
+sdd_capacityBytes<br>
+sdd_diskType<br>
+sdd_isDegraded<br>
+sdd_path<br>
+sdd_status<br>
+sdd_unallocatedBytes<br>
+sdd_usableBytes<br>
+ssd_active_count<br>
+ssd_inactive_count<br>
+status<br>
+time<br>
+writeBytePerSecond<br>
+writesPerSecond</td>
+</tr>
+</tbody>
+</table>
+
 ### Configure Monitoring for Polaris
 
 Configuring monitoring for Polaris is very similar to CDM. If you
@@ -553,6 +757,8 @@ data.
 | Runway Remaining                      | Last 90 days  |
 | Cluster Throughput - IOPS             | Last 24 hours |
 | Cluster Throughput - Bytes per Second | Last 24 hours |
+
+Further custom dashboards can be created as required, using standard Splunk queries. Some examples and suggestions are documented in the included [Custom Dashboard Guide](./custom-dashboard-guide.md).
 
 ### Setting a Default Rubrik Cluster for Dashboards
 

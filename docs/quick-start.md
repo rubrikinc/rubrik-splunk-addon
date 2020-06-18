@@ -258,7 +258,7 @@ instructions above:
 </tr>
 <tr>
 <td><strong>Search String</strong></td>
-<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Backup" | eval _time = strptime(time, "%a %b %d %H:%M:%S %Z %Y") | dedup id</td>
+<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Backup" | eval _time = coalesce(strptime(time, "%a %b %d %H:%M:%S %Z %Y"),strptime((time+" UTC"), "%Y-%m-%dT%H:%M:%S.%fZ %Z")) | dedup id</td>
 </tr>
 <tr class="even">
 <td><strong>Table ID</strong></td>
@@ -309,7 +309,7 @@ daysRemaining
 </tr>
 <tr class="even">
 <td><strong>Search String</strong></td>
-<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Audit" | eval _time = strptime(time, "%a %b %d %H:%M:%S %Z %Y")</td>
+<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Audit" | eval _time = coalesce(strptime(time, "%a %b %d %H:%M:%S %Z %Y"),strptime((time+" UTC"), "%Y-%m-%dT%H:%M:%S.%fZ %Z"))</td>
 </tr>
 <tr class="odd">
 <td><strong>Table ID</strong></td>
@@ -390,7 +390,7 @@ writesPerSecond</td>
 </tr>
 <tr>
 <td><strong>Search String</strong></td>
-<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Replication" | eval _time = strptime(time, "%a %b %d %H:%M:%S %Z %Y") | dedup id</td>
+<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Replication" | eval _time = coalesce(strptime(time, "%a %b %d %H:%M:%S %Z %Y"),strptime((time+" UTC"), "%Y-%m-%dT%H:%M:%S.%fZ %Z")) | dedup id</td>
 </tr>
 <tr class="even">
 <td><strong>Table ID</strong></td>
@@ -417,7 +417,7 @@ objectType</td>
 </tr>
 <tr>
 <td><strong>Search String</strong></td>
-<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Archive" | eval _time = strptime(time, "%a %b %d %H:%M:%S %Z %Y") | dedup id</td>
+<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Archive" | eval _time = coalesce(strptime(time, "%a %b %d %H:%M:%S %Z %Y"),strptime((time+" UTC"), "%Y-%m-%dT%H:%M:%S.%fZ %Z")) | dedup id</td>
 </tr>
 <tr class="even">
 <td><strong>Table ID</strong></td>
@@ -444,7 +444,7 @@ objectType</td>
 </tr>
 <tr>
 <td><strong>Search String</strong></td>
-<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Recovery" | eval _time = strptime(time, "%a %b %d %H:%M:%S %Z %Y") | dedup id</td>
+<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Recovery" | eval _time = coalesce(strptime(time, "%a %b %d %H:%M:%S %Z %Y"),strptime((time+" UTC"), "%Y-%m-%dT%H:%M:%S.%fZ %Z")) | dedup id</td>
 </tr>
 <tr class="even">
 <td><strong>Table ID</strong></td>
@@ -532,7 +532,7 @@ numWindowsVolumeGroupsArchived</td>
 </tr>
 <tr>
 <td><strong>Search String</strong></td>
-<td>(index="main") (sourcetype="rubrik:nodeiostats") | fields "_time", "clusterName", "nodeId", "readBytePerSecond", "readsPerSecond", "time", "writeBytePerSecond", "writesPerSecond" | eval _time = strptime(time, "%Y-%m-%dT%H:%M:%S.%f%Z") | fields "_time", "clusterName", "nodeId", "readBytePerSecond", "readsPerSecond", "writeBytePerSecond", "writesPerSecond"</td>
+<td>(index="main") (sourcetype="rubrik:nodeiostats") | eval _time = strptime(time, "%Y-%m-%dT%H:%M:%S.%f%Z")</td>
 </tr>
 <tr class="even">
 <td><strong>Table ID</strong></td>
@@ -713,6 +713,57 @@ Use these values to configure the input:
 | **Index**          | main                                         |
 | **Global Account** | \<Polaris Account Name\>                     |
 | **Polaris URL**    | \<your\_polaris\_url\>.my.rubrik.com         |
+
+#### Creating Dataset for Polaris
+
+Use these values to create the dataset:
+
+<table width="100%">
+<tbody>
+<tr class="odd">
+<td><strong>Table Title</strong></td>
+<td>Polaris - Radar Anomalies</td>
+</tr>
+<tr>
+<td><strong>Search String</strong></td>
+<td>((index="main") (sourcetype="polaris:radaranomalies")) | eval _time = strptime(lastUpdated, "%Y-%m-%dT%H:%M:%S.%f%Z") | dedup id</td>
+</tr>
+<tr class="even">
+<td><strong>Table ID</strong></td>
+<td>rubrik_dataset_radar_anomalies</td>
+</tr>
+<tr class="odd">
+<td><strong>Fields</strong></td>
+<td>_time<br>
+clusterName<br>
+id<br>
+lastUpdated<br>
+message<br>
+objectId<br>
+objectName<br>
+objectType</td>
+severity</td>
+</tr>
+</tbody>
+</table>
+
+#### Creating Visualizations for Radar data
+
+Below are some sample visualization searches for Polaris events:
+
+`| from datamodel:"polaris_dataset_radar_anomalies" | stats count by severity`
+
+This can be used to create a pie chart showing alomalous events by severity.
+
+`| from datamodel:"polaris_dataset_radar_anomalies" | stats count by objectName`
+
+This can be used to create a pie chart showing alomalous events by object name.
+
+`| from datamodel:"polaris_dataset_radar_anomalies" | table _time,objectName,message`
+
+This will produce a table of time, object names, and the anomaly messages.
+
+![Polaris Dashboard](images/polaris-visualizations.png)
 
 ## Upgrading the Rubrik Add-On for Splunk
 

@@ -309,7 +309,7 @@ daysRemaining
 </tr>
 <tr class="even">
 <td><strong>Search String</strong></td>
-<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Audit" | eval _time = strptime(time, "%a %b %d %H:%M:%S %Z %Y")</td>
+<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Audit" | eval _time = coalesce(strptime(time, "%a %b %d %H:%M:%S %Z %Y"),strptime((time+" UTC"), "%Y-%m-%dT%H:%M:%S.%fZ %Z"))</td>
 </tr>
 <tr class="odd">
 <td><strong>Table ID</strong></td>

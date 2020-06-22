@@ -69,6 +69,17 @@ After logging back into the Splunk server, you will see the **Rubrik Splunk Appl
 This section details the steps required to configure all necessary
 components for the Rubrik Add-On for Splunk.
 
+### Credentials
+
+The integration should be configured using an account with admin credentials on the Rubrik clusters it is connecting to. From Rubrik CDM 4.2, it is possible to create a read only admin user, which is better suited for this kind of monitoring. To do this, run the following commands:
+
+```bash
+USER_ID=$(curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{"username":"readonlyadmin","password":"NotAPa$5123!!!","emailAddress":"readonlyadmin@rubrik.demo"}' 'https://rubrik.demo.com/api/internal/user' -k -u 'admin:NotAPa$5123!!!' -s | jq -r '.id')
+curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d $(echo '{"principals":["'$USER_ID'"],"privileges":{"basic":["Global:::All"]}}') 'https://rubrik.demo.com/api/internal/authorization/role/read_only_admin' -k -u 'admin:NotAPa$5123!!!' -s | jq
+```
+
+This will create a read only admin user with the specified details. This has been tested with the integration and works fine.
+
 ### Configure Monitoring for Cloud Data Management
 
 The next step is to configure credentials for your Rubrik CDM
@@ -258,7 +269,7 @@ instructions above:
 </tr>
 <tr>
 <td><strong>Search String</strong></td>
-<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Backup" | eval _time = coalesce(strptime(time, "%a %b %d %H:%M:%S %Z %Y"),strptime((time+" UTC"), "%Y-%m-%dT%H:%M:%S.%fZ %Z")) | dedup id</td>
+<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Backup" | dedup id</td>
 </tr>
 <tr class="even">
 <td><strong>Table ID</strong></td>
@@ -309,7 +320,7 @@ daysRemaining
 </tr>
 <tr class="even">
 <td><strong>Search String</strong></td>
-<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Audit" | eval _time = coalesce(strptime(time, "%a %b %d %H:%M:%S %Z %Y"),strptime((time+" UTC"), "%Y-%m-%dT%H:%M:%S.%fZ %Z"))</td>
+<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Audit" | dedup id</td>
 </tr>
 <tr class="odd">
 <td><strong>Table ID</strong></td>
@@ -320,7 +331,6 @@ daysRemaining
 <td>_time<br>
 clusterName<br>
 eventStatus<br>
-eventType<br>
 message<br>
 username<br>
 hostname</td>
@@ -364,7 +374,7 @@ used</td>
 </tr>
 <tr class="even">
 <td><strong>Search String</strong></td>
-<td>(index="main") (sourcetype="rubrik:clusteriostats") | eval _time = strptime(time, "%Y-%m-%dT%H:%M:%S.%f%Z")</td>
+<td>(index="main") (sourcetype="rubrik:clusteriostats")</td>
 </tr>
 <tr class="odd">
 <td><strong>Table ID</strong></td>
@@ -390,7 +400,7 @@ writesPerSecond</td>
 </tr>
 <tr>
 <td><strong>Search String</strong></td>
-<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Replication" | eval _time = coalesce(strptime(time, "%a %b %d %H:%M:%S %Z %Y"),strptime((time+" UTC"), "%Y-%m-%dT%H:%M:%S.%fZ %Z")) | dedup id</td>
+<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Replication" | dedup id</td>
 </tr>
 <tr class="even">
 <td><strong>Table ID</strong></td>
@@ -417,7 +427,7 @@ objectType</td>
 </tr>
 <tr>
 <td><strong>Search String</strong></td>
-<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Archive" | eval _time = coalesce(strptime(time, "%a %b %d %H:%M:%S %Z %Y"),strptime((time+" UTC"), "%Y-%m-%dT%H:%M:%S.%fZ %Z")) | dedup id</td>
+<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Archive" | dedup id</td>
 </tr>
 <tr class="even">
 <td><strong>Table ID</strong></td>
@@ -444,7 +454,7 @@ objectType</td>
 </tr>
 <tr>
 <td><strong>Search String</strong></td>
-<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Recovery" | eval _time = coalesce(strptime(time, "%a %b %d %H:%M:%S %Z %Y"),strptime((time+" UTC"), "%Y-%m-%dT%H:%M:%S.%fZ %Z")) | dedup id</td>
+<td>(index="main") (sourcetype="rubrik:eventfeed") | where eventType="Recovery" | dedup id</td>
 </tr>
 <tr class="even">
 <td><strong>Table ID</strong></td>
@@ -472,7 +482,7 @@ username</td>
 </tr>
 <tr>
 <td><strong>Search String</strong></td>
-<td>(index="main") (sourcetype="rubrik:archivebandwidth") | eval _time = strptime(time, "%Y-%m-%dT%H:%M:%S.%f%Z")</td>
+<td>(index="main") (sourcetype="rubrik:archivebandwidth")</td>
 </tr>
 <tr class="even">
 <td><strong>Table ID</strong></td>
@@ -532,7 +542,7 @@ numWindowsVolumeGroupsArchived</td>
 </tr>
 <tr>
 <td><strong>Search String</strong></td>
-<td>(index="main") (sourcetype="rubrik:nodeiostats") | eval _time = strptime(time, "%Y-%m-%dT%H:%M:%S.%f%Z")</td>
+<td>(index="main") (sourcetype="rubrik:nodeiostats")</td>
 </tr>
 <tr class="even">
 <td><strong>Table ID</strong></td>
@@ -628,7 +638,7 @@ writable</td>
 </tr>
 <tr>
 <td><strong>Search String</strong></td>
-<td>(index="main") (sourcetype="rubrik:nodestats") | eval _time = strptime(time, "%Y-%m-%dT%H:%M:%S.%f%Z")</td>
+<td>(index="main") (sourcetype="rubrik:nodestats")</td>
 </tr>
 <tr class="even">
 <td><strong>Table ID</strong></td>
@@ -726,7 +736,7 @@ Use these values to create the dataset:
 </tr>
 <tr>
 <td><strong>Search String</strong></td>
-<td>((index="main") (sourcetype="polaris:radaranomalies")) | eval _time = strptime(lastUpdated, "%Y-%m-%dT%H:%M:%S.%f%Z") | dedup id</td>
+<td>((index="main") (sourcetype="polaris:radaranomalies")) | dedup id</td>
 </tr>
 <tr class="even">
 <td><strong>Table ID</strong></td>
@@ -737,7 +747,6 @@ Use these values to create the dataset:
 <td>_time<br>
 clusterName<br>
 id<br>
-lastUpdated<br>
 message<br>
 objectId<br>
 objectName<br>

@@ -80,6 +80,10 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
 
 This will create a read only admin user with the specified details. This has been tested with the integration and works fine.
 
+### Logging
+
+The add-on log files will show details on the success/failure of data gathering for each input and for each API call made to Rubrik CDM. These log files can be found at `$SPLUNK_HOME/var/log/splunk` by default. `INFO` level logging should be sufficient for day-to-day usage, but additional logging is available using the `DEBUG` log level, configurable through the add-on UI. This may be useful if experiencing issues getting data into Splunk.
+
 ### Configure Monitoring for Cloud Data Management
 
 The next step is to configure credentials for your Rubrik CDM
@@ -124,12 +128,16 @@ below.
 | Note:​ For each input you are able to choose to validate SSL certificates for the Rubrik cluster. This is disabled by default, but the 'Verify SSL Certificate' box can be checked on each input to enable this. |
 | --- |
 
+| Note:​ A timeout value is configurable for each data input, which will be used when sending API calls to Rubrik CDM. By default this will be set to 60 seconds, and 60 seconds will be used if an erroneous value is entered in the data input configuration. The value should be between 1 (1 second) and 3600 (1 hour). |
+| --- |
+
 | **Input Type**     | Rubrik - Runway remaining                    |
 | ------------------ | -------------------------------------------- |
 | **Name**           | rubrik\_runway\_remaining                    |
 | **Interval**       | 3600                                         |
 | **Index**          | main                                         |
 | **Global Account** | \<Account Name defined in previous section\> |
+| **Timeout**        | 60                                           |
 | **Rubrik Node**    | \<FQDN or floating IP\>                      |
 
 | **Input Type**     | Rubrik - Storage Summary                     |
@@ -138,6 +146,7 @@ below.
 | **Interval**       | 600                                          |
 | **Index**          | main                                         |
 | **Global Account** | \<Account Name defined in previous section\> |
+| **Timeout**        | 60                                           |
 | **Rubrik Node**    | \<FQDN or floating IP\>                      |
 
 | **Input Type**     | Rubrik - Cluster IO Stats                    |
@@ -146,6 +155,7 @@ below.
 | **Interval**       | 60                                           |
 | **Index**          | main                                         |
 | **Global Account** | \<Account Name defined in previous section\> |
+| **Timeout**        | 60                                           |
 | **Rubrik Node**    | \<FQDN or floating IP\>                      |
 
 | **Input Type**     | Rubrik - Event Feed                          |
@@ -154,6 +164,7 @@ below.
 | **Interval**       | 300                                          |
 | **Index**          | main                                         |
 | **Global Account** | \<Account Name defined in previous section\> |
+| **Timeout**        | 60                                           |
 | **Rubrik Node**    | \<FQDN or floating IP\>                      |
 
 | **Input Type**     | Rubrik - Archive Location Bandwidth          |
@@ -162,6 +173,7 @@ below.
 | **Interval**       | 840                                          |
 | **Index**          | main                                         |
 | **Global Account** | \<Account Name defined in previous section\> |
+| **Timeout**        | 60                                           |
 | **Rubrik Node**    | \<FQDN or floating IP\>                      |
 
 | **Input Type**     | Rubrik - Archive Location Usage              |
@@ -170,6 +182,7 @@ below.
 | **Interval**       | 3600                                         |
 | **Index**          | main                                         |
 | **Global Account** | \<Account Name defined in previous section\> |
+| **Timeout**        | 60                                           |
 | **Rubrik Node**    | \<FQDN or floating IP\>                      |
 
 | **Input Type**     | Rubrik - Organization Capacity Report        |
@@ -178,6 +191,7 @@ below.
 | **Interval**       | 1800                                         |
 | **Index**          | main                                         |
 | **Global Account** | \<Account Name defined in previous section\> |
+| **Timeout**        | 60                                           |
 | **Rubrik Node**    | \<FQDN or floating IP\>                      |
 
 | **Input Type**     | Rubrik - Managed Volume Summary              |
@@ -186,6 +200,7 @@ below.
 | **Interval**       | 600                                          |
 | **Index**          | main                                         |
 | **Global Account** | \<Account Name defined in previous section\> |
+| **Timeout**        | 60                                           |
 | **Rubrik Node**    | \<FQDN or floating IP\>                      |
 
 | **Input Type**     | Rubrik - Node IO Stats                       |
@@ -194,6 +209,7 @@ below.
 | **Interval**       | 60                                           |
 | **Index**          | main                                         |
 | **Global Account** | \<Account Name defined in previous section\> |
+| **Timeout**        | 60                                           |
 | **Rubrik Node**    | \<FQDN or floating IP\>                      |
 
 | **Input Type**     | Rubrik - Node Stats                          |
@@ -202,6 +218,7 @@ below.
 | **Interval**       | 60                                           |
 | **Index**          | main                                         |
 | **Global Account** | \<Account Name defined in previous section\> |
+| **Timeout**        | 60                                           |
 | **Rubrik Node**    | \<FQDN or floating IP\>                      |
 
 Below is an example of what your **Inputs** screen would look like if
